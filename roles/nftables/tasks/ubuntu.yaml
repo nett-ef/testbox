@@ -1,0 +1,36 @@
+---
+- name: Stop, disable and mask ufw
+  systemd:
+    name: ufw.service
+    state: stopped
+    enabled: no
+    masked: yes
+
+- name: Install nftables
+  apt:
+    state: present
+    name:
+      - nftables
+      - libnftnl11
+
+- name: Enable and unmask nftables
+  systemd:
+    name: nftables.service
+    state: started
+    enabled: yes
+    masked: no
+
+- name: Save nftables config
+  template:
+    src: roles/nftables/templates/nftables.conf.j2
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: '0755'
+    force: yes
+    lstrip_blocks: yes
+    trim_blocks: yes
+    validate: nft --check -f %s
+  tags: nft_rules
+  notify: Restart nftables
+...

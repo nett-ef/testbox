@@ -1,0 +1,50 @@
+Port {{ sshd_port }}
+AddressFamily {{ sshd_address_family }}
+ListenAddress {{ sshd_listen_address }}
+SyslogFacility {{ sshd_log_facility }}
+LogLevel {{ sshd_log_level }}
+LoginGraceTime {{ sshd_login_grace_time }}
+PermitRootLogin no
+PermitEmptyPasswords no
+StrictModes yes
+MaxAuthTries {{ sshd_max_auth_tries }}
+MaxSessions {{ sshd_max_sessions }}
+UsePAM yes
+AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys2
+AuthorizedPrincipalsFile none
+AuthorizedKeysCommand none
+AuthorizedKeysCommandUser nobody
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+KexAlgorithms {{ sshd_kex_algo }}
+Ciphers {{ sshd_ciphers }}
+MACs {{ sshd_macs }}
+AuthenticationMethods {{ sshd_authentication_methods }}
+PubkeyAuthentication yes
+PasswordAuthentication {{ sshd_password_auth }}
+HostbasedAuthentication no
+KerberosAuthentication no
+KbdInteractiveAuthentication no
+GSSAPIAuthentication no
+PermitTunnel no
+AllowAgentForwarding {{ sshd_agent_forwarding }}
+AllowTcpForwarding {{ sshd_tcp_forwarding }}
+X11Forwarding no
+GatewayPorts no
+PermitTTY yes
+PrintLastLog yes
+TCPKeepAlive yes
+PermitUserEnvironment {{ sshd_permit_user_environment }}
+Compression delayed
+ClientAliveInterval 0
+ClientAliveCountMax 3
+UseDNS no
+PidFile /run/sshd.pid
+MaxStartups 10:30:100
+ChrootDirectory none
+VersionAddendum none
+Banner none
+PrintMotd yes
+AcceptEnv LANG LC_*
+Subsystem sftp /usr/lib/openssh/sftp-server -f {{ sshd_log_facility }} -l {{ sshd_log_level }}

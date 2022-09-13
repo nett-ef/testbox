@@ -1,0 +1,126 @@
+---
+- name: Upgrade all packages
+  apt:
+    upgrade: full
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install the edge kernel to evict exploits and to add new TCP features
+  apt:
+    name: linux-image-generic-hwe-*-edge
+    state: present
+  notify:
+    - Reboot system
+
+- name: Disable IOMMU to prevent DMA attacks
+  lineinfile:
+    path: /etc/default/grub
+    regexp: 'GRUB_CMDLINE_LINUX'
+    line: 'GRUB_CMDLINE_LINUX="iommu=off intel_iommu=off"'
+    validate: 'grub-mkconfig'
+  notify:
+    - Update grub
+    - Reboot system
+
+- name: Restrict dmesg
+  sysctl:
+    name: kernel.dmesg_restrict
+    value: 1
+    state: present
+    sysctl_set: yes
+    reload: yes
+
+- name: Enable and unmask journald
+  systemd:
+    name: systemd-journald.service
+    state: started
+    enabled: yes
+    masked: no
+
+- name: Configure journald
+  template:
+    src: roles/hardened/templates/journald.conf.j2
+    dest: /etc/systemd/journald.conf
+    owner: root
+    group: root
+    mode: '0644'
+    force: yes
+    backup: yes
+  notify: Restart journald
+
+- name: Enable and unmask sshd
+  systemd:
+    name: sshd.service
+    state: started
+    enabled: yes
+    masked: no
+
+- name: Configure sshd
+  template:
+    src: roles/hardened/templates/sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0644'
+    force: yes
+    backup: yes
+    validate: "sshd -t -f %s"
+  notify: Restart sshd
+
+- name: Read moduli file
+  community.general.read_csv:
+    path: "{{ sshd_moduli_file }}"
+    dialect: unix
+    delimiter: ' '
+    fieldnames:
+      - timestamp
+      - type
+      - tests
+      - trials
+      - size
+      - generator
+      - modulus
+  register: moduli
+
+- name: Get min moduli size
+  set_fact:
+    moduli_min: "{{ moduli.list | map(attribute='size') | sort | first }}"
+    cacheable: no
+
+- name: Deactivate short moduli
+  shell: > 
+    awk '$5 >= {{ sshd_moduli_min }}' {{ sshd_moduli_file }} 
+    > {{ sshd_moduli_file }}.tmp 
+    && mv {{ sshd_moduli_file }}.tmp {{ sshd_moduli_file }}
+  when: moduli_min | int < sshd_moduli_min
+  notify: Restart sshd
+
+- name: Disable ICMP redirects
+  sysctl:
+    name: "{{ item }}"
+    value: 0
+    state: present
+    sysctl_set: yes
+    reload: yes
+  loop:
+    - "net.ipv4.conf.all.accept_redirects"
+    - "net.ipv6.conf.all.accept_redirects"
+    - "net.ipv4.conf.all.secure_redirects"
+    - "net.ipv4.conf.all.send_redirects"
+
+- name: Apply RFC1337 prevention measures on TIME-WAIT attacks
+  sysctl:
+    name: "net.ipv4.tcp_rfc1337"
+    value: 1
+    state: present
+    sysctl_set: yes
+    reload: yes
+
+- name: Ignore bogus ICMP warnings
+  sysctl:
+    name: "net.ipv4.icmp_ignore_bogus_error_responses"
+    value: 1
+    state: present
+    sysctl_set: yes
+    reload: yes
+...

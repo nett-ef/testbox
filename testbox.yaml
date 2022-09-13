@@ -1,0 +1,13 @@
+---
+- name: Assign roles
+  hosts: all
+  become: yes
+  gather_facts: yes
+  roles:
+    - { role: common, tags: common }
+    - { role: hardened, tags: hardening }
+    - { role: unattended_upgrades, tags: unattended_upgrades }
+    - { role: nftables, tags: nftables }
+    - { role: troubleshooting, tags: troubleshooting }
+    - { role: microk8s, tags: microk8s }
+...

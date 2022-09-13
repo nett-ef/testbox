@@ -1,0 +1,22 @@
+---
+- name: Install troubleshooting tools
+  apt:
+    state: present
+    name:
+      - smartmontools
+      - rhash
+      - iptables
+      - traceroute
+      - net-tools
+      - conntrack
+      - bind9-dnsutils
+      - curl
+      - netcat
+      - iperf3
+      - less
+      - vim
+      - htop
+      - lynx
+      - man-db
+      - sqlite3
+...

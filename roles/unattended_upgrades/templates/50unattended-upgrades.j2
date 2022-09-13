@@ -1,0 +1,23 @@
+Unattended-Upgrade::Allowed-Origins {
+	"${distro_id}:${distro_codename}";
+	"${distro_id}:${distro_codename}-security";
+	"${distro_id}ESMApps:${distro_codename}-apps-security";
+	"${distro_id}ESM:${distro_codename}-infra-security";
+};
+
+Unattended-Upgrade::Package-Blacklist {};
+Unattended-Upgrade::DevRelease "auto";
+Unattended-Upgrade::AutoFixInterruptedDpkg "true";
+Unattended-Upgrade::MinimalSteps "false";
+Unattended-Upgrade::InstallOnShutdown "false";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "{{ unattended_upgrades_remove_kernels }}";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "{{ unattended_upgrades_autoremove }}";
+Unattended-Upgrade::Remove-Unused-Dependencies "{{ unattended_upgrades_autoremove }}";
+Unattended-Upgrade::Automatic-Reboot "{{ unattended_upgrades_auto_reboot }}";
+Unattended-Upgrade::Automatic-Reboot-WithUsers "{{ unattended_upgrades_auto_reboot }}";
+Unattended-Upgrade::Automatic-Reboot-Time "now";
+Unattended-Upgrade::SyslogEnable "true";
+Unattended-Upgrade::SyslogFacility "daemon";
+Unattended-Upgrade::OnlyOnACPower "false";
+Unattended-Upgrade::Skip-Updates-On-Metered-Connections "false";
+Unattended-Upgrade::Verbose "false";

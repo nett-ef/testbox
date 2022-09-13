@@ -1,0 +1,73 @@
+---
+- name: Install microk8s
+  snap:
+    name: microk8s
+    state: present
+    classic: yes
+
+- name: Disable ha-cluster
+  command: microk8s disable ha-cluster --force
+  register: result
+  async: 1200
+  poll: 10
+  changed_when: '"HA disabled" in result.stdout'
+
+- name: Wait for microk8s installation to complete
+  command: microk8s status --wait-ready
+  async: 1200
+  poll: 10
+  changed_when: no
+
+- name: Enable dns
+  command: microk8s enable dns
+  register: result
+  async: 1200
+  poll: 10
+  changed_when: '"DNS is enabled" in result.stdout'
+
+- name: Enable registry
+  command: microk8s enable registry
+  register: result
+  async: 1200
+  poll: 10
+  changed_when: '"The registry is enabled" in result.stdout'
+
+- name: Enable helm3
+  command: microk8s enable helm3
+  register: result
+  async: 1200
+  poll: 10
+  changed_when: '"Helm 3 is enabled" in result.stdout'
+
+- name: Wait for addons availability
+  command: >
+    microk8s kubectl wait --for=condition=available=true
+    "{{ item.name }}" --namespace="{{ item.ns }}"
+  loop:
+    - { name: 'deployment.apps/coredns', ns: 'kube-system' }
+    - { name: 'deployment.apps/hostpath-provisioner', ns: 'kube-system' }
+    - { name: 'deployment.apps/registry', ns: 'container-registry' }
+  async: 1200
+  poll: 10
+  changed_when: no
+
+- name: Install jq
+  apt:
+    state: present
+    name: jq
+
+- name: Get cni and flannel interfaces
+  shell: >
+    ip -j link show | jq -r '.[].ifname | select(contains("cni", "flannel"))'
+  register: kubeifs
+  changed_when: no
+
+- debug: var=kubeifs.stdout_lines
+
+- name: Get all Kubernetes objects
+  command: microk8s kubectl get all --all-namespaces
+  register: kubestat
+  changed_when: no
+
+- debug: var=kubestat.stdout_lines
+...

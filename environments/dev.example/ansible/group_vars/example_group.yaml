@@ -1,0 +1,27 @@
+---
+users:
+  - name: "username"
+    system_groups:
+      - "sudo"
+      - "microk8s"
+
+daemon_users:
+#  - "gitea"
+
+nft_input_policy: "drop"
+nft_forward_policy: "drop"
+nft_chain_priority: -1
+
+nft_accept_ifs:
+  - "lo"
+  - "cni0"
+  - "flannel.1"
+
+nft_accept_tcp_ports:
+  - "{{ sshd_port }}"
+
+nft_accept_udp_ports:
+
+nft_accept_forward:
+  - "10.1.0.0/16"
+...

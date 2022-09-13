@@ -1,0 +1,5 @@
+---
+- name: Run Ubuntu tasks
+  import_tasks: ubuntu.yaml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+...

@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "testbox"
+version = "1.0.0"
+description = "Ansible playbook that deploys a single-node Kubernetes cluster"
+authors = ["Fedor Saveliev <https://github.com/nett-ef>"]
+readme = "README.rst"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+Sphinx = "^5.1.1"
+sphinx-rtd-theme = "^1.0.0"
+sphinxcontrib-restbuilder = "^0.3"
+sphinx-markdown-builder = "^0.5.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

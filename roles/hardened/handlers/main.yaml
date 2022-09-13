@@ -1,0 +1,19 @@
+---
+- name: Restart journald
+  systemd:
+    name: systemd-journald.service
+    state: restarted
+    daemon_reload: yes
+
+- name: Restart sshd
+  systemd:
+    name: sshd.service
+    state: restarted
+    daemon_reload: yes
+
+- name: Update grub
+  command: update-grub
+
+- name: Reboot system
+  reboot:
+...

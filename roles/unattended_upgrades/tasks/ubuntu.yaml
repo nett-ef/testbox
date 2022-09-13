@@ -1,0 +1,35 @@
+---
+- name: Install unattended-upgrades and update-notifier-common
+  apt:
+    state: present
+    name:
+      - unattended-upgrades
+      - update-notifier-common
+
+- name: Enable and unmask unattended-upgrades
+  systemd:
+    name: unattended-upgrades
+    state: started
+    enabled: yes
+    masked: no
+
+- name: Configure unattended upgrades
+  template:
+    src: roles/unattended_upgrades/templates/50unattended-upgrades.j2
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    owner: root
+    group: root
+    mode: '0644'
+    force: yes
+  notify: Restart unattended-upgrades
+
+- name: Configure unattended upgrades schedule
+  copy:
+    src: roles/unattended_upgrades/files/20auto-upgrades
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: '0644'
+    force: yes
+  notify: Restart unattended-upgrades
+...

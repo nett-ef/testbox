@@ -1,0 +1,5 @@
+.idea
+docs/build/doctrees
+*.log
+*.iml
+.DS_Store

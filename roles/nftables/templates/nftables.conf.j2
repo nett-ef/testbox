@@ -1,0 +1,57 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+	chain input {
+		type filter hook input priority {{ nft_chain_priority }}; policy {{ nft_input_policy }};
+		ct state related, established counter accept
+		{% if nft_accept_ifs is not none %}
+            {% set ns = namespace(iifs="") %}
+            {% if nft_accept_ifs | length > 1 %}
+                {% set ns.iifs = "{" ~ nft_accept_ifs | map("to_json") | join(", ") ~ "}" %}
+            {% elif nft_accept_ifs | length == 1 %}
+                {% set ns.iifs = nft_accept_ifs | map("to_json") | first %}
+            {% endif %}
+                iifname {{ ns.iifs }} counter accept
+        {% endif %}
+		{% if nft_accept_tcp_ports is not none %}
+		    {% set ns = namespace(ports="") %}
+		    {% if nft_accept_tcp_ports | length > 1 %}
+                {% set ns.ports = "{" ~ nft_accept_tcp_ports | join(", ") ~ "}" %}
+		    {% elif nft_accept_tcp_ports | length == 1 %}
+                {% set ns.ports = nft_accept_tcp_ports | first %}
+		    {% endif %}
+                tcp dport {{ ns.ports }} counter accept
+        {% endif %}
+		{% if nft_accept_udp_ports is not none %}
+		    {% set ns = namespace(ports="") %}
+		    {% if nft_accept_udp_ports | length > 1 %}
+                {% set ns.ports = "{" ~ nft_accept_udp_ports | join(", ") ~ "}" %}
+		    {% elif nft_accept_udp_ports | length == 1 %}
+                {% set ns.ports = nft_accept_udp_ports | first %}
+		    {% endif %}
+                udp dport {{ ns.ports }} counter accept
+        {% endif %}
+		ip protocol icmp limit rate 300/second counter accept
+		counter comment "packets reached the end of the chain"
+	}
+	chain forward {
+		type filter hook forward priority {{ nft_chain_priority }}; policy {{ nft_forward_policy }};
+        {% if nft_accept_forward is not none %}
+            {% set ns = namespace(forward="") %}
+            {% if nft_accept_forward | length > 1 %}
+                {% set ns.forward = "{" ~ nft_accept_forward | join(", ") ~ "}" %}
+		    {% elif nft_accept_forward | length == 1 %}
+                {% set ns.forward = nft_accept_forward | first %}
+		    {% endif %}
+                ip saddr {{ ns.forward }} counter accept
+                ip daddr {{ ns.forward }} counter accept
+        {% endif %}
+
+		counter comment "packets reached the end of the chain"
+	}
+	chain output {
+		type filter hook output priority {{ nft_chain_priority }}; policy accept;
+	}
+}
