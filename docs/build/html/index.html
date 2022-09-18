@@ -87,7 +87,7 @@ Kubernetes cluster.
 It is smaller than <a class="reference external" href="https://kubespray.io/">Kubespray</a> having fewer
 components and options.
 Most of the Kubernetes components were switched off, allowing it to run on
-low-end computers like Raspberry Pi.
+low-end computers.
 It can be used for development when a quick microk8s environment is needed.</p>
 <p>Supported OS: Ubuntu 22.04 LTS.</p>
 </section>
@@ -158,7 +158,7 @@ groups, etc.</p></li>
     <span class="o">--</span><span class="n">private</span><span class="o">-</span><span class="n">key</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">username_ed25519</span> \
     <span class="o">--</span><span class="n">vault</span><span class="o">-</span><span class="nb">id</span> <span class="n">testbox</span><span class="o">@~/.</span><span class="n">vault</span><span class="o">/</span><span class="n">testbox</span> \
     <span class="o">--</span><span class="n">tags</span> <span class="n">hardening</span> \
-    <span class="o">-</span><span class="n">e</span> <span class="n">ansible_port</span> <span class="mi">22</span>
+    <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;ansible_port=22&quot;</span>
 </pre></div>
 </div>
 </section>

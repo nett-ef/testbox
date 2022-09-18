@@ -5,7 +5,7 @@ Kubernetes cluster.
 It is smaller than `Kubespray <https://kubespray.io/>`_ having fewer
 components and options.
 Most of the Kubernetes components were switched off, allowing it to run on
-low-end computers like Raspberry Pi.
+low-end computers.
 It can be used for development when a quick microk8s environment is needed.
 
 Supported OS: Ubuntu 22.04 LTS.
@@ -72,7 +72,7 @@ Run the `hardening` tasks with `ansible_port` redefined::
         --private-key ~/.ssh/username_ed25519 \
         --vault-id testbox@~/.vault/testbox \
         --tags hardening \
-        -e ansible_port 22
+        -e "ansible_port=22"
 
 How to open firewall ports
 ==========================

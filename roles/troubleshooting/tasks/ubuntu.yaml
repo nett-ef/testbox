@@ -19,4 +19,5 @@
       - lynx
       - man-db
       - sqlite3
+      - lm-sensors
 ...
