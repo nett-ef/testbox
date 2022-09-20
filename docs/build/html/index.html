@@ -117,7 +117,7 @@ Study the topics to meet your SLOs and develop your security policy.</p>
 <li><p><cite>environments/dev.example/ansible/hosts.yaml</cite></p></li>
 <li><p><cite>environments/dev.example/ansible/secrets.yaml</cite></p></li>
 <li><p><cite>environments/dev.example/ansible/group_vars/all.yaml</cite></p></li>
-<li><p><cite>environments/dev.example/ansible/group_vars/example_group.yaml</cite></p></li>
+<li><p><cite>environments/dev.example/ansible/group_vars/microk8s.yaml</cite></p></li>
 </ul>
 </div></blockquote>
 <p>The <cite>secrets.yaml</cite> file contains <cite>ansible_become_password</cite> for the hosts.
@@ -167,7 +167,7 @@ groups, etc.</p></li>
 <ol class="arabic simple">
 <li><p>Add the port number to the <cite>nft_accept_tcp_ports</cite> or <cite>nft_accept_udp_ports</cite>
 list in the variables file:
-<cite>environments/dev.example/ansible/group_vars/example_group.yaml</cite>.</p></li>
+<cite>environments/dev.example/ansible/group_vars/microk8s.yaml</cite>.</p></li>
 <li><p>Run the play with <code class="docutils literal notranslate"><span class="pre">--tags</span> <span class="pre">nft_rules</span></code> to apply the change.</p></li>
 </ol>
 </section>
@@ -176,7 +176,7 @@ list in the variables file:
 <ol class="arabic simple">
 <li><p>Add the user name to the <cite>daemon_users</cite>
 list in the variables file:
-<cite>environments/dev.example/ansible/group_vars/example_group.yaml</cite>.</p></li>
+<cite>environments/dev.example/ansible/group_vars/microk8s.yaml</cite>.</p></li>
 <li><p>Run the play with <code class="docutils literal notranslate"><span class="pre">--tags</span> <span class="pre">common</span></code> to apply the change and get the UID.</p></li>
 </ol>
 </section>

@@ -47,7 +47,7 @@ Usage
 
       *  *environments/dev.example/ansible/group_vars/all.yaml*
 
-      *  *environments/dev.example/ansible/group_vars/example_group.yaml*
+      *  *environments/dev.example/ansible/group_vars/microk8s.yaml*
 
    The *secrets.yaml* file contains *ansible_become_password* for the
    hosts. The key is encrypted with the `Ansible Vault
@@ -106,7 +106,7 @@ How to open firewall ports
 
 1. Add the port number to the *nft_accept_tcp_ports* or
    *nft_accept_udp_ports* list in the variables file:
-   *environments/dev.example/ansible/group_vars/example_group.yaml*.
+   *environments/dev.example/ansible/group_vars/microk8s.yaml*.
 
 2. Run the play with ``--tags nft_rules`` to apply the change.
 
@@ -115,7 +115,7 @@ How to create an application account
 ************************************
 
 1. Add the user name to the *daemon_users* list in the variables file:
-   *environments/dev.example/ansible/group_vars/example_group.yaml*.
+   *environments/dev.example/ansible/group_vars/microk8s.yaml*.
 
 2. Run the play with ``--tags common`` to apply the change and get the
    UID.

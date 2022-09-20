@@ -1,7 +1,7 @@
 ---
 all:
   children:
-    example_group:
+    microk8s:
       hosts:
         example_host:
           ansible_host: 172.16.0.1

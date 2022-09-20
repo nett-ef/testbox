@@ -9,5 +9,11 @@
     - { role: unattended_upgrades, tags: unattended_upgrades }
     - { role: nftables, tags: nftables }
     - { role: troubleshooting, tags: troubleshooting }
+
+- name: Install microk8s
+  hosts: microk8s
+  become: yes
+  gather_facts: yes
+  roles:
     - { role: microk8s, tags: microk8s }
 ...
