@@ -6,7 +6,7 @@ authors = ["Fedor Saveliev <https://github.com/nett-ef>"]
 readme = "README.rst"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 
 [tool.poetry.group.docs]
 optional = true
